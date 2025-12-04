@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import * as path from 'path';
 import { User } from './user/user.entity';
 import { AuthModule } from './auth/auth.module';
+import { RedisModule } from '@nestjs-modules/ioredis';
 
 const envPath = path.resolve('.env');
 
@@ -15,6 +16,17 @@ const envPath = path.resolve('.env');
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [envPath],
+    }),
+    RedisModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        type: 'single',
+        options: {
+          host: configService.get('REDIS_HOST'), // Redis 服务器地址
+          port: configService.get('REDIS_PORT'), // Redis 端口
+          password: configService.get('REDIS_PASSWD'), // 如果有设置密码的话
+        },
+      }),
+      inject: [ConfigService],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -33,6 +45,7 @@ const envPath = path.resolve('.env');
     }),
     UserModule,
     AuthModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
