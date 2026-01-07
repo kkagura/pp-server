@@ -41,7 +41,6 @@ export class AuthService {
   }
 
   async getInfo(authHeader: string) {
-    console.log(authHeader, 'authHeader');
     if (!authHeader) {
       throw new HttpException(
         {
