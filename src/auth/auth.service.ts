@@ -1,4 +1,10 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { SignInDto } from './signIn.dto';
 import { UserService } from 'src/user/user.service';
 import { compare } from 'bcrypt';
@@ -32,5 +38,42 @@ export class AuthService {
         expiresIn: this.jwtConfiguration.accessTokenTtl,
       }),
     };
+  }
+
+  async getInfo(authHeader: string) {
+    console.log(authHeader, 'authHeader');
+    if (!authHeader) {
+      throw new HttpException(
+        {
+          code: 401, // 未授权错误码
+          message: '未授权Token',
+        },
+        HttpStatus.UNAUTHORIZED, // 使用 401 状态码
+      );
+    }
+    const token = authHeader.split(' ')[1]; // 提取 Bearer token
+    if (!token) {
+      throw new HttpException(
+        {
+          code: 401, // 未授权错误码
+          message: 'Token无效',
+        },
+        HttpStatus.UNAUTHORIZED, // 使用 401 状态码
+      );
+    } else {
+      // 验证token
+      const decoded = this.jwtService.verify(token);
+      if (!decoded) {
+        throw new HttpException(
+          {
+            code: 401, // 未授权错误码
+            message: 'Token无效',
+          },
+          HttpStatus.UNAUTHORIZED, // 使用 401 状态码
+        );
+      } else {
+        return decoded;
+      }
+    }
   }
 }

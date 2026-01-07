@@ -59,4 +59,6 @@ export class UserService {
   findByUsername(username: string) {
     return this.userRepository.findOne({ where: { username } });
   }
+
+  getUserInfo() {}
 }
