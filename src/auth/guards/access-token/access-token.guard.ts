@@ -26,7 +26,7 @@ export class AccessTokenGuard implements CanActivate {
     if (isPublic) return true;
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    if (!token) throw new UnauthorizedException();
+    if (!token) throw new UnauthorizedException('未登录或Token无效');
 
     try {
       const payload = await this.jwtService.verifyAsync(
@@ -35,7 +35,7 @@ export class AccessTokenGuard implements CanActivate {
       );
       request['user'] = payload;
     } catch (error) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('未登录或Token无效');
     }
     return true;
   }
