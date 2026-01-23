@@ -8,6 +8,8 @@ import * as path from 'path';
 import { User } from './user/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { RedisModule } from '@nestjs-modules/ioredis';
+import { FileModule } from './file/file.module';
+import { File } from './file/file.entity';
 
 const envPath = path.resolve('.env');
 
@@ -33,7 +35,7 @@ const envPath = path.resolve('.env');
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         type: 'mysql', // 数据库类型
-        entities: [User], // 数据表实体
+        entities: [User, File], // 数据表实体
         host: configService.get('DB_HOST'), // 主机，默认为localhost
         port: configService.get<number>('DB_PORT'), // 端口号
         username: configService.get('DB_USER'), // 用户名
@@ -45,6 +47,7 @@ const envPath = path.resolve('.env');
     }),
     UserModule,
     AuthModule,
+    FileModule,
     RedisModule,
   ],
   controllers: [AppController],
