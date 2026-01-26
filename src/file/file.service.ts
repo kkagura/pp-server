@@ -380,9 +380,9 @@ export class FileService {
     const folder = this.fileRepository.create({
       filename: folderName,
       path: fullFolderPath,
-      md5: null, // 文件夹没有MD5
+      md5: '', // 文件夹没有MD5
       size: 0,
-      mimeType: null,
+      mimeType: '',
       parentPath: parentPath || '/',
       isDirectory: 1,
       userId: userId,
