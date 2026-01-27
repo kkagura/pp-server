@@ -71,7 +71,7 @@ export class FileService {
   async uploadFile(
     file: Express.Multer.File,
     parentPath?: string,
-    userId?: number,
+    username?: string,
   ) {
     if (!file) {
       throw new BadRequestException('文件不能为空');
@@ -92,7 +92,7 @@ export class FileService {
         mimeType: file.mimetype,
         parentPath: parentPath || '/',
         isDirectory: 0,
-        userId: userId,
+        createBy: username,
       });
       await this.fileRepository.save(newFileRecord);
 
@@ -137,7 +137,7 @@ export class FileService {
       mimeType: file.mimetype,
       parentPath: parentPath || '/',
       isDirectory: 0,
-      userId: userId,
+      createBy: username,
     });
     await this.fileRepository.save(newFile);
 
@@ -198,7 +198,7 @@ export class FileService {
     totalChunks: number,
     totalSize: number,
     parentPath?: string,
-    userId?: number,
+    username?: string,
   ) {
     // 检查文件是否已存在（秒传）
     const existingFile = await this.checkFileExists(md5, filename);
@@ -215,7 +215,7 @@ export class FileService {
         mimeType: this.getMimeType(filename),
         parentPath: parentPath || '/',
         isDirectory: 0,
-        userId: userId,
+        createBy: username,
       });
       await this.fileRepository.save(newFileRecord);
 
@@ -299,7 +299,7 @@ export class FileService {
       mimeType: this.getMimeType(filename),
       parentPath: parentPath || '/',
       isDirectory: 0,
-      userId: userId,
+      createBy: username,
     });
     await this.fileRepository.save(newFile);
 
@@ -346,7 +346,7 @@ export class FileService {
   async createFolder(
     folderName: string,
     parentPath?: string,
-    userId?: number,
+    username?: string,
   ) {
     if (!folderName || folderName.trim() === '') {
       throw new BadRequestException('文件夹名称不能为空');
@@ -385,7 +385,7 @@ export class FileService {
       mimeType: '',
       parentPath: parentPath || '/',
       isDirectory: 1,
-      userId: userId,
+      createBy: username,
     });
     await this.fileRepository.save(folder);
 

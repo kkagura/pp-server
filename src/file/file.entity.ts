@@ -33,7 +33,7 @@ export class File {
   isDirectory: number;
 
   @Column({ type: 'int', nullable: true, comment: '上传用户ID' })
-  userId: number;
+  createBy: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

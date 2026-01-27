@@ -41,7 +41,7 @@ export class AuthService {
     };
   }
 
-  async getInfo(authHeader: string) {
+  getInfo(authHeader: string): { username: string } {
     if (!authHeader) {
       throw new UnauthorizedException('未登录或Token无效');
     }

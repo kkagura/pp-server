@@ -3,9 +3,10 @@ import { FileController } from './file.controller';
 import { FileService } from './file.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { File } from './file.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([File])],
+  imports: [TypeOrmModule.forFeature([File]), AuthModule],
   controllers: [FileController],
   providers: [FileService],
   exports: [FileService],

@@ -7,6 +7,7 @@ import {
   Get,
   Query,
   BadRequestException,
+  Headers,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
@@ -18,10 +19,14 @@ import {
   MergeChunksDto,
 } from './file.dto';
 import { Public } from '../common/decorators/public.decorator';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('file')
 export class FileController {
-  constructor(private readonly fileService: FileService) {}
+  constructor(
+    private readonly fileService: FileService,
+    private readonly authService: AuthService,
+  ) {}
 
   /**
    * 普通文件上传
@@ -31,12 +36,13 @@ export class FileController {
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @Body() uploadFileDto: UploadFileDto,
+    @Headers('Authorization') authorization: string,
   ) {
+    const { username } = this.authService.getInfo(authorization);
     return this.fileService.uploadFile(
       file,
       uploadFileDto.parentPath,
-      // TODO: 从请求中获取用户ID（需要实现认证中间件）
-      undefined,
+      username,
     );
   }
 
@@ -141,4 +147,3 @@ export class FileController {
     );
   }
 }
-
