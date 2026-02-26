@@ -41,7 +41,9 @@ export class AuthService {
     };
   }
 
-  getInfo(authHeader: string): { username: string } {
+  async getInfo(
+    authHeader: string,
+  ): Promise<{ username: string; nickname: string }> {
     if (!authHeader) {
       throw new UnauthorizedException('未登录或Token无效');
     }
@@ -54,7 +56,15 @@ export class AuthService {
       if (!decoded) {
         throw new UnauthorizedException('未登录或Token无效');
       } else {
-        return decoded;
+        const username = decoded.username;
+        const user = await this.userService.findByUsername(username);
+        if (!user) {
+          throw new UnauthorizedException('未登录或Token无效');
+        }
+        return {
+          username: user.username,
+          nickname: user.nickname,
+        };
       }
     }
   }
