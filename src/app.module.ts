@@ -4,8 +4,10 @@ import { AppService } from './app.service';
 import { ConfigService, ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
+import { RoleModule } from './role/role.module';
 import * as path from 'path';
 import { User } from './user/user.entity';
+import { Role } from './role/role.entity';
 import { AuthModule } from './auth/auth.module';
 import { RedisModule } from '@nestjs-modules/ioredis';
 
@@ -33,7 +35,7 @@ const envPath = path.resolve('.env');
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         type: 'mysql', // 数据库类型
-        entities: [User], // 数据表实体
+        entities: [User, Role], // 数据表实体
         host: configService.get('DB_HOST'), // 主机，默认为localhost
         port: configService.get<number>('DB_PORT'), // 端口号
         username: configService.get('DB_USER'), // 用户名
@@ -44,6 +46,7 @@ const envPath = path.resolve('.env');
       }),
     }),
     UserModule,
+    RoleModule,
     AuthModule,
     RedisModule,
   ],
