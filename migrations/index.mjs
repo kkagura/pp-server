@@ -2,6 +2,7 @@ import { createConnection } from 'typeorm';
 import { config } from 'dotenv';
 import { getVersion } from './version.mjs';
 import { update1 } from './update1.mjs';
+import { auth } from './auth.mjs';
 
 config();
 
@@ -15,6 +16,7 @@ async function migrate() {
     database: process.env.DB_DATABASE,
   });
   await update1();
+  await auth();
   connection.close();
   process.exit(0);
 }
